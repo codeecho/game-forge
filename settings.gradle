@@ -1,0 +1,7 @@
+include 'core', 'library', 'playground-core', 'playground-desktop', 'playground-html'
+
+project(":core").name = "gdx-forge-core"
+project(":library").name = "gdx-forge-library"
+project(":playground-core").name = "gdx-forge-playground-core"
+project(":playground-desktop").name = "gdx-forge-playground-desktop"
+project(":playground-html").name = "gdx-forge-playground-html"

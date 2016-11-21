@@ -54,6 +54,15 @@ project(":gdx-forge-library") {
     }
 }
 
+project(":gdx-forge-tmx") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile project(":gdx-forge-core")
+    }
+}
+
 project(":gdx-forge-playground-core") {
     apply plugin: "java"
 
@@ -61,6 +70,7 @@ project(":gdx-forge-playground-core") {
     dependencies {
         compile project(":gdx-forge-core")
         compile project(":gdx-forge-library")
+        compile project(":gdx-forge-tmx")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.0"

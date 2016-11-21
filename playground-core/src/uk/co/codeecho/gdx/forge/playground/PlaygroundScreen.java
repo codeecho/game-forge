@@ -1,21 +1,28 @@
 package uk.co.codeecho.gdx.forge.playground;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import uk.co.codeecho.gdx.forge.camera.StandardCamera;
+import uk.co.codeecho.gdx.forge.component.builder.ComponentBuilderFactory;
+import uk.co.codeecho.gdx.forge.component.builder.ComponentBuilderFactoryImpl;
 import uk.co.codeecho.gdx.forge.library.event.listener.SpriteBatchEventListener;
 import uk.co.codeecho.gdx.forge.screen.Screen;
-import uk.co.codeecho.gdx.forge.screen.ScreenLayer;
+import uk.co.codeecho.gdx.forge.tmx.TMXMap;
+import uk.co.codeecho.gdx.forge.tmx.TMXMapBuilder;
+import uk.co.codeecho.gdx.forge.tmx.TMXMapBuilderImpl;
 
 public class PlaygroundScreen extends Screen{
 
-    private SpriteBatch spriteBatch;
+    private final SpriteBatch spriteBatch;
     
     public PlaygroundScreen() {
         spriteBatch = new SpriteBatch();
-        addEventListener(new SpriteBatchEventListener(spriteBatch));
-        ScreenLayer layer1 = new ScreenLayer();
-        layer1.addComponent(new TextureComponent(spriteBatch, new Texture("badlogic.jpg")));
-        addLayer(layer1);
+        OrthographicCamera camera = new StandardCamera();
+        ComponentBuilderFactory componentBuilderFactory = new ComponentBuilderFactoryImpl();
+        TMXMapBuilder mapBuilder = new TMXMapBuilderImpl("simple-scene.tmx", componentBuilderFactory, camera, spriteBatch);
+        TMXMap map = mapBuilder.build();
+        addLayers(map.getLayers());
+        addEventListener(new SpriteBatchEventListener(spriteBatch, camera));
     }
 
 }

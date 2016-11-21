@@ -39,21 +39,4 @@
 454,455,456,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,454,455,456
 </data>
  </layer>
- <objectgroup name="Object Layer 1">
-  <object x="112" y="96" width="64" height="64">
-   <properties>
-    <property name="type" value="player"/>
-   </properties>
-  </object>
-  <object x="352" y="128" width="32" height="32">
-   <properties>
-    <property name="type" value="item"/>
-   </properties>
-  </object>
-  <object x="128" y="208" width="32" height="32">
-   <properties>
-    <property name="type" value="npc"/>
-   </properties>
-  </object>
- </objectgroup>
 </map>

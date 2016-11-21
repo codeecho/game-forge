@@ -2,6 +2,7 @@ package uk.co.codeecho.gdx.forge.screen;
 
 import com.badlogic.gdx.graphics.Color;
 import java.util.LinkedList;
+import java.util.List;
 import uk.co.codeecho.gdx.forge.Renderable;
 import uk.co.codeecho.gdx.forge.Updatable;
 import uk.co.codeecho.gdx.forge.event.DelegatingEventListener;
@@ -26,6 +27,12 @@ public abstract class Screen implements Updatable, Renderable, EventListener<Eve
 
     public void addLayer(ScreenLayer layer) {
         layers.add(layer);
+    }
+    
+    public void addLayers(List<ScreenLayer> layers){
+        for(ScreenLayer layer: layers){
+            addLayer(layer);
+        }
     }
 
     public Color getClearColor() {

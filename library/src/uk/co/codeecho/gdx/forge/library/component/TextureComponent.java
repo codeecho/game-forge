@@ -1,4 +1,4 @@
-package uk.co.codeecho.gdx.forge.playground;
+package uk.co.codeecho.gdx.forge.library.component;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,17 +8,19 @@ import uk.co.codeecho.gdx.forge.component.Component;
 
 public class TextureComponent implements Component, Renderable {
 
-    private final SpriteBatch spriteBatch;
+    private Rectangle bounds;
     private final Texture texture;
+    private final SpriteBatch spriteBatch;
 
-    public TextureComponent(SpriteBatch spriteBatch, Texture texture) {
-        this.spriteBatch = spriteBatch;
+    public TextureComponent(Rectangle bounds, Texture texture, SpriteBatch spriteBatch) {
+        this.bounds = bounds;
         this.texture = texture;
+        this.spriteBatch = spriteBatch;
     }
 
     @Override
     public void render() {
-        spriteBatch.draw(texture, 0, 0);
+        spriteBatch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height);
     }
 
 }

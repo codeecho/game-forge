@@ -1,22 +1,18 @@
 package uk.co.codeecho.gdx.forge.event;
 
-public class FilteringEventListener implements EventListener<Event>{
-
-    private EventFilter filter;
-    private EventHandler handler;
-
-    public FilteringEventListener(EventFilter filter, EventHandler handler) {
-        this.filter = filter;
-        this.handler = handler;
-    }
+public abstract class FilteringEventListener<E extends Event> implements EventListener<E>{
     
     @Override
     public boolean handle(Event event) {
-        if(filter.accepts(event)){
-            handler.handle(event);
+        if(accepts(event)){
+            doHandle((E)event);
             return true;
         }
         return false;
     }
+    
+    public abstract boolean accepts(Event event);
+    
+    public abstract void doHandle(E event);
 
 }

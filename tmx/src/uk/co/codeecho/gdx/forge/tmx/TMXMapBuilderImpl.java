@@ -8,13 +8,13 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import java.lang.reflect.InvocationTargetException;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.Method;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import org.apache.commons.beanutils.MethodUtils;
 import uk.co.codeecho.gdx.forge.GameManager;
 import uk.co.codeecho.gdx.forge.component.Component;
 import uk.co.codeecho.gdx.forge.component.builder.ComponentBuilder;
@@ -28,15 +28,15 @@ public class TMXMapBuilderImpl implements TMXMapBuilder {
     private final ComponentBuilderFactory factory;
     private final OrthographicCamera camera;
 
-    public TMXMapBuilderImpl(String tmxFile, ComponentBuilderFactory factory, OrthographicCamera camera, SpriteBatch spriteBatch) {
-        this.tiledMap = new TmxMapLoader().load(tmxFile);
+    public TMXMapBuilderImpl(TiledMap tiledMap, ComponentBuilderFactory factory, OrthographicCamera camera, SpriteBatch spriteBatch) {
+        this.tiledMap = tiledMap;
         this.tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1 / GameManager.getInstance().getPixelsPerUnit(), spriteBatch);
         this.factory = factory;
         this.camera = camera;
     }
 
     @Override
-    public TMXMap build() {
+    public List<ScreenLayer> build() {
         List<ScreenLayer> layers = new LinkedList<ScreenLayer>();
         for (MapLayer mapLayer : tiledMap.getLayers()) {
             List<Component> components = new LinkedList<Component>();
@@ -62,14 +62,7 @@ public class TMXMapBuilderImpl implements TMXMapBuilder {
             layer.addComponents(components);
             layers.add(layer);
         }
-        MapProperties mapProperties = tiledMap.getProperties();
-        int tilesWide = mapProperties.get("width", Integer.class);
-        int tilesHigh = mapProperties.get("height", Integer.class);
-        int tileWidth = mapProperties.get("tilewidth", Integer.class);
-        int tileHeight = mapProperties.get("tileheight", Integer.class);
-        float width = GameManager.getInstance().pixelsToUnits(tilesWide * tileWidth);
-        float height = GameManager.getInstance().pixelsToUnits(tilesHigh * tileHeight);
-        return new TMXMap(layers, width, height);
+        return layers;
     }
 
     protected void processMapObject(MapObject mapObject) {
@@ -94,13 +87,19 @@ public class TMXMapBuilderImpl implements TMXMapBuilder {
             String key = keys.next();
             Object value = properties.get(key);
             try {
-                MethodUtils.invokeMethod(builder, "set" + key.substring(0, 1).toUpperCase() + key.substring(1), value);
-            } catch (NoSuchMethodException ex) {
-                System.out.println("WARNING: No setter found for " + key);
-            } catch (IllegalAccessException ex) {
+                if(key.matches("x|y|width|height")){
+                    float floatValue = (Float)value;
+                    floatValue = GameManager.getInstance().pixelsToUnits(floatValue);
+                    value = floatValue;
+                }
+                Method[] methods = ClassReflection.getMethods(builder.getClass());
+                for(Method method: methods){
+                    if(method.getName().equals("set" + key.substring(0, 1).toUpperCase() + key.substring(1))){
+                        method.invoke(builder, value);
+                    }
+                }
+            } catch (ReflectionException ex) {
                 throw new IllegalStateException(ex);
-            } catch (InvocationTargetException ex) {
-                throw new IllegalStateException(ex.getCause());
             }
         }
     }

@@ -51,10 +51,20 @@ project(":gdx-forge-library") {
 
     dependencies {
         compile project(":gdx-forge-core")
+        compile project(":gdx-forge-box2d")
     }
 }
 
 project(":gdx-forge-tmx") {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile project(":gdx-forge-core")
+    }
+}
+
+project(":gdx-forge-box2d") {
     apply plugin: "java"
 
 
@@ -71,6 +81,7 @@ project(":gdx-forge-playground-core") {
         compile project(":gdx-forge-core")
         compile project(":gdx-forge-library")
         compile project(":gdx-forge-tmx")
+        compile project(":gdx-forge-box2d")
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.0"
@@ -101,6 +112,9 @@ project(":gdx-forge-playground-html") {
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
+        compile "net.dermetfan.libgdx-utils:libgdx-utils:0.13.0:sources"
+        compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.0:sources"
     }
 }
 

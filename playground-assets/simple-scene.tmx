@@ -39,4 +39,22 @@
 454,455,456,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,454,455,456
 </data>
  </layer>
+ <objectgroup name="Object Layer 1">
+  <object x="320" y="112" width="80" height="80">
+   <properties>
+    <property name="type" value="logo"/>
+   </properties>
+  </object>
+  <object x="96" y="288" width="48" height="64">
+   <properties>
+    <property name="id" value="player"/>
+    <property name="type" value="player"/>
+   </properties>
+  </object>
+  <object x="48" y="384" width="144" height="48">
+   <properties>
+    <property name="type" value="block"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

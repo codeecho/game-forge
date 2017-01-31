@@ -1,8 +1,9 @@
-include 'core', 'library', 'tmx', 'playground-core', 'playground-desktop', 'playground-html'
+include 'core', 'library', 'tmx', 'box2d', 'playground-core', 'playground-desktop', 'playground-html'
 
 project(":core").name = "gdx-forge-core"
 project(":library").name = "gdx-forge-library"
 project(":tmx").name = "gdx-forge-tmx"
+project(":box2d").name = "gdx-forge-box2d"
 project(":playground-core").name = "gdx-forge-playground-core"
 project(":playground-desktop").name = "gdx-forge-playground-desktop"
 project(":playground-html").name = "gdx-forge-playground-html"

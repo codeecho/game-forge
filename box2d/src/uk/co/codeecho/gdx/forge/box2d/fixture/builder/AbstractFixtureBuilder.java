@@ -31,6 +31,11 @@ public abstract class AbstractFixtureBuilder<B extends AbstractFixtureBuilder> {
         return (B) this;
     }
     
+    public B setDensity(float density) {
+        fixtureDef.density = density;
+        return (B) this;
+    }
+    
     public B setId(String id){
         this.id = id;
         return (B) this;

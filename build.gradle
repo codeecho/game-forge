@@ -14,10 +14,12 @@ buildscript {
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
+    apply plugin: "maven"
 
-    version = '1.0'
+    group = "uk.co.codeecho.gdx-forge"
+    version = '0.1.0-SNAPSHOT'
     ext {
-        appName = 'my-gdx-game'
+        appName = 'gdx-forge'
         gdxVersion = '1.6.4'
         roboVMVersion = '1.5.0'
         box2DLightsVersion = '1.4'
@@ -42,6 +44,8 @@ project(":gdx-forge-core") {
         compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.0"
         compile "commons-beanutils:commons-beanutils:1.9.2"
         compile "commons-collections:commons-collections:3.2.1"
+        compile group: 'junit', name: 'junit', version: '4.12'
+
     }
 }
 

@@ -18,6 +18,10 @@ public abstract class RectangularComponentBuilder<B extends RectangularComponent
         return (B) this;
     }
     
+    public B setPosition(float x, float y){
+        return (B) setX(x).setY(y);
+    }
+    
     public B setWidth(float width){
         bounds.width = width;
         return (B) this;
@@ -26,6 +30,10 @@ public abstract class RectangularComponentBuilder<B extends RectangularComponent
     public B setHeight(float height){
         bounds.height = height;
         return (B) this;
+    }
+    
+    public B setSize(float width, float height){
+        return (B) setWidth(width).setHeight(height);
     }
     
     public B setBounds(Rectangle bounds){

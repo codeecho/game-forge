@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import uk.co.codeecho.gdx.forge.Renderable;
+import uk.co.codeecho.gdx.forge.component.Renderable;
 import uk.co.codeecho.gdx.forge.component.Component;
 
 public class ParrallaxBackground implements Component, Renderable{

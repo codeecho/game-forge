@@ -3,7 +3,7 @@ package uk.co.codeecho.gdx.forge.action;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import uk.co.codeecho.gdx.forge.Updatable;
+import uk.co.codeecho.gdx.forge.component.Updatable;
 
 public class ActionManager implements Updatable{
 

@@ -1,33 +1,27 @@
 package uk.co.codeecho.gdx.forge.playground;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 import uk.co.codeecho.gdx.forge.component.builder.ComponentBuilder;
 import uk.co.codeecho.gdx.forge.component.builder.ComponentBuilderFactoryImpl;
 import uk.co.codeecho.gdx.forge.component.builder.ComponentBuilderProvider;
 import uk.co.codeecho.gdx.forge.library.component.builder.provider.BlockBuilderProvider;
-import uk.co.codeecho.gdx.forge.library.component.builder.provider.PlatformBuilderProvider;
-import uk.co.codeecho.gdx.forge.library.component.builder.provider.TextureComponentBuilderProvider;
-import uk.co.codeecho.gdx.forge.playground.player.PlayerComponentBuilder;
+import uk.co.codeecho.gdx.forge.library.scene2d.Scene2DRenderer;
+import uk.co.codeecho.gdx.forge.playground.round.RoundTimerBuilder;
 
 public class PlaygroundComponentBuilderFactory extends ComponentBuilderFactoryImpl{
 
-    public PlaygroundComponentBuilderFactory(final SpriteBatch spriteBatch, final World world) {
-        addProvider("logo", new TextureComponentBuilderProvider(new Texture("badlogic.jpg"), spriteBatch));
-        
-        addProvider("player", new ComponentBuilderProvider() {
+    public PlaygroundComponentBuilderFactory(final SpriteBatch spriteBatch, final World world, final Scene2DRenderer renderer) {
+        addProvider("button", new BlockBuilderProvider(world, "button"));
+        addProvider("block", new BlockBuilderProvider(world));
+        addProvider("instructions", new BlockBuilderProvider(world));
+        addProvider("time", new ComponentBuilderProvider() {
 
             @Override
             public ComponentBuilder getBuilder() {
-                return new PlayerComponentBuilder(world, spriteBatch);
+                return new RoundTimerBuilder(renderer);
             }
         });
-        
-        addProvider("block", new BlockBuilderProvider(world));
-        addProvider("platform", new PlatformBuilderProvider(world));
-        addProvider("end", new BlockBuilderProvider(world, "end"));
-        addProvider("death", new BlockBuilderProvider(world, "death"));
     }
 
 }

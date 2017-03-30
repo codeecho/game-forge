@@ -3,9 +3,9 @@ package uk.co.codeecho.gdx.forge.animation;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.LinkedList;
-import uk.co.codeecho.gdx.forge.Renderable;
+import uk.co.codeecho.gdx.forge.component.Renderable;
 import uk.co.codeecho.gdx.forge.StateTimeManager;
-import uk.co.codeecho.gdx.forge.Updatable;
+import uk.co.codeecho.gdx.forge.component.Updatable;
 import uk.co.codeecho.gdx.forge.predicate.Predicate;
 
 public class AnimationHandler implements Updatable, Renderable{

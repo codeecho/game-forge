@@ -1,6 +1,8 @@
 package uk.co.codeecho.gdx.forge.event;
 
-public interface EventListener<E extends Event> {
+import uk.co.codeecho.gdx.forge.component.Component;
+
+public interface EventListener<E extends Event> extends Component{
 
     public boolean handle(E event);
     

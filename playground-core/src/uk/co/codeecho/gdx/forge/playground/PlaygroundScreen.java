@@ -1,131 +1,140 @@
 package uk.co.codeecho.gdx.forge.playground;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import uk.co.codeecho.gdx.forge.GameManager;
-import uk.co.codeecho.gdx.forge.action.ContinuousAction;
-import uk.co.codeecho.gdx.forge.box2d.collision.event.CollisionStartEventFilter;
+import uk.co.codeecho.gdx.forge.action.Action;
 import uk.co.codeecho.gdx.forge.box2d.collision.event.PreCollisionEvent;
 import uk.co.codeecho.gdx.forge.box2d.collision.event.PreCollisionEventListener;
 import uk.co.codeecho.gdx.forge.box2d.debug.Box2DDebugRenderer;
-import uk.co.codeecho.gdx.forge.box2d.fixture.filter.BodyTypeFixtureFilter;
 import uk.co.codeecho.gdx.forge.box2d.fixture.filter.ComponentFixtureFilter;
+import uk.co.codeecho.gdx.forge.box2d.fixture.filter.ComponentTypeFixtureFilter;
 import uk.co.codeecho.gdx.forge.box2d.world.WorldBuilder;
 import uk.co.codeecho.gdx.forge.box2d.world.WorldStepAction;
+import uk.co.codeecho.gdx.forge.camera.StandardCamera;
 import uk.co.codeecho.gdx.forge.component.builder.ComponentBuilderFactory;
-import uk.co.codeecho.gdx.forge.input.KeyDownEvent;
-import uk.co.codeecho.gdx.forge.input.KeyDownEventListener;
-import uk.co.codeecho.gdx.forge.input.KeyPressedEvent;
-import uk.co.codeecho.gdx.forge.input.KeyPressedEventListener;
-import uk.co.codeecho.gdx.forge.input.KeyUpEvent;
-import uk.co.codeecho.gdx.forge.input.KeyUpEventListener;
-import uk.co.codeecho.gdx.forge.library.action.ChangeScreenAction;
-import uk.co.codeecho.gdx.forge.library.action.UpdateCameraAction;
-import uk.co.codeecho.gdx.forge.library.camera.Box2DBoundedTrackingCamera;
+import uk.co.codeecho.gdx.forge.input.touch.TouchUpEvent;
+import uk.co.codeecho.gdx.forge.input.touch.TouchUpEventListener;
+import uk.co.codeecho.gdx.forge.library.component.Block;
+import uk.co.codeecho.gdx.forge.library.event.box2d.Box2dTouchListener;
+import uk.co.codeecho.gdx.forge.library.event.box2d.FixtureTouchUpEvent;
+import uk.co.codeecho.gdx.forge.library.event.box2d.FixtureTouchUpEventListener;
 import uk.co.codeecho.gdx.forge.library.event.listener.SpriteBatchEventListener;
-import uk.co.codeecho.gdx.forge.library.parrallax.ParrallaxBackground;
-import uk.co.codeecho.gdx.forge.playground.player.PlayerComponent;
+import uk.co.codeecho.gdx.forge.library.scene2d.Scene2DRenderer;
+import uk.co.codeecho.gdx.forge.playground.ball.Ball;
+import uk.co.codeecho.gdx.forge.playground.ball.BallViewModel;
+import uk.co.codeecho.gdx.forge.playground.player.Player;
+import uk.co.codeecho.gdx.forge.playground.player.PlayerComponentBuilder;
 import uk.co.codeecho.gdx.forge.screen.Screen;
-import uk.co.codeecho.gdx.forge.screen.ScreenLayer;
 import uk.co.codeecho.gdx.forge.tmx.TMXMapBuilder;
 import uk.co.codeecho.gdx.forge.tmx.TMXMapBuilderImpl;
-import uk.co.codeecho.gdx.forge.tmx.TMXMapProperties;
-import uk.co.codeecho.gdx.forge.tmx.TMXMapUtils;
 
 public class PlaygroundScreen extends Screen {
 
-    private final Box2DBoundedTrackingCamera camera;
+    private final World world;
 
-    private final PlayerComponent player;
+    private final Block goButton;
+    private final Block throwButton;
+    
+    private final Player player1;
+    private final Player player2;
+    
+    private final Ball ball;
+
+    private boolean throwButtonEnabled = false;
 
     public PlaygroundScreen() {
         SpriteBatch spriteBatch = new SpriteBatch();
-        World world = new WorldBuilder().setGravity(new Vector2(0, -20f)).build();
+        world = new WorldBuilder().build();
 
         addAction(new WorldStepAction(world));
 
-        TiledMap map = new TmxMapLoader().load("platformer-demo.tmx");
-        TMXMapProperties mapProperties = TMXMapUtils.getMapProperties(map);
+        TiledMap map = new TmxMapLoader().load("cortex.tmx");
 
         GameManager gameManager = GameManager.getInstance();
 
-        camera = new Box2DBoundedTrackingCamera(gameManager.getDisplayWidthInUnits()*2, gameManager.getDisplayHeightInUnits()*2, 0, mapProperties.getWidth(), 0, mapProperties.getHeight(), 1, null);
+        StandardCamera camera = new StandardCamera();
 
-        ScreenLayer parralaxLayer = new ScreenLayer("backgrounds");
-        parralaxLayer.addComponent(new ParrallaxBackground(camera, spriteBatch, new Texture("bg3.png"), mapProperties.getWidth(), mapProperties.getHeight(), 0.5f, false, true));
-        addLayer(parralaxLayer);
-
-        ComponentBuilderFactory componentBuilderFactory = new PlaygroundComponentBuilderFactory(spriteBatch, world);
+        Scene2DRenderer scene2dRenderer = new Scene2DRenderer(spriteBatch);
+        
+        ComponentBuilderFactory componentBuilderFactory = new PlaygroundComponentBuilderFactory(spriteBatch, world, scene2dRenderer);
         TMXMapBuilder mapBuilder = new TMXMapBuilderImpl(map, componentBuilderFactory, camera, spriteBatch);
         addLayers(mapBuilder.build());
 
-        addComponent(new SpriteBatchEventListener(spriteBatch, camera));
+        goButton = (Block) getComponent("goButton");
+        throwButton = (Block) getComponent("throwButton");
+
+        player1 = new PlayerComponentBuilder(world, spriteBatch)
+                .setPosition(2, 6).build();
+        addComponent(player1);
         
-        if(gameManager.isDebugMode()){
+        player2 = new PlayerComponentBuilder(world, spriteBatch)
+                .setPosition(2, 4).build();
+        addComponent(player2);
+
+        ball = new Ball(new BallViewModel(world, 0.1f));
+        ball.setPosition(new Vector2(-10, -10));
+        addComponent(ball);
+        
+        player1.takeBall(ball);
+
+        addComponent(new SpriteBatchEventListener(spriteBatch, camera));
+
+        if (gameManager.isDebugMode()) {
             addComponent(new Box2DDebugRenderer(world, camera, spriteBatch));
         }
-
-        player = (PlayerComponent) getComponent("player");
-
-        camera.setTarget(player.getBody());
-        
-        camera.update();
-
-        addAction(new UpdateCameraAction(camera));
 
         addEventListeners();
     }
 
     private void addEventListeners() {
-        addEventListener(new KeyPressedEventListener() {
+        addEventListener(new Box2dTouchListener(world, this));
+        addEventListener(new FixtureTouchUpEventListener(new ComponentFixtureFilter(throwButton)) {
 
             @Override
-            public void doHandle(KeyPressedEvent event) {
-                int key = event.getKey();
-                if (key == Input.Keys.RIGHT) {
-                    player.moveRight();
-                } else if (key == Input.Keys.LEFT) {
-                    player.moveLeft();
+            public void doHandle(FixtureTouchUpEvent event) {
+                throwButtonEnabled = !throwButtonEnabled;
+            }
+        });
+        addEventListener(new FixtureTouchUpEventListener(new ComponentFixtureFilter(goButton)) {
+
+            @Override
+            public void doHandle(FixtureTouchUpEvent event) {
+                player1.act();
+            }
+        });
+        addEventListener(new TouchUpEventListener() {
+
+            @Override
+            public void doHandle(TouchUpEvent event) {
+                if (throwButtonEnabled) {
+                    player1.addThrowAction(event.getCoordinates());
+                    throwButtonEnabled = false;
+                } else {
+                    player1.addMoveAction(event.getCoordinates());
                 }
             }
         });
-        addEventListener(new KeyDownEventListener(Input.Keys.UP) {
-
-            @Override
-            public void doHandle(KeyDownEvent event) {
-                player.jump();
-            }
-        });
-        addEventListener(new KeyUpEventListener(Input.Keys.LEFT, Input.Keys.RIGHT) {
-
-            @Override
-            public void doHandle(KeyUpEvent event) {
-                player.idle();
-            }
-        });
-        addEventListener(new KeyUpEventListener(Input.Keys.UP) {
-
-            @Override
-            public void doHandle(KeyUpEvent event) {
-                player.stopJumping();
-            }
-        });
-        addEventListener(new PreCollisionEventListener(new ComponentFixtureFilter(player), new BodyTypeFixtureFilter("platform")) {
-
+        addEventListener(new PreCollisionEventListener(new ComponentFixtureFilter(ball), new ComponentTypeFixtureFilter(Player.class)) {
+            
             @Override
             public void doHandle(PreCollisionEvent event) {
-                if (player.isJumping()) {
-                    event.getCollision().cancel();
-                }
+                addAction(new Action() {
+
+                    @Override
+                    public boolean invoke(float delta) {
+                        ball.setPosition(new Vector2(-10, -10));
+                        return true;
+                    }
+                });
+                Player player = (Player) event.getCollision().getTargetComponent();
+                player.takeBall(ball);
+                event.getCollision().cancel();
             }
         });
-        addEventListener(new CollisionStartEventFilter(new ComponentFixtureFilter(player), new BodyTypeFixtureFilter("end")), new ChangeScreenAction(Screens.GAME_COMPLETE));
-        addEventListener(new CollisionStartEventFilter(new ComponentFixtureFilter(player), new BodyTypeFixtureFilter("death")), new ChangeScreenAction(Screens.GAME_OVER));
     }
 
 }

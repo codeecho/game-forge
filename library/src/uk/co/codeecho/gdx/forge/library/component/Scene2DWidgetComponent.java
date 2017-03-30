@@ -2,8 +2,8 @@ package uk.co.codeecho.gdx.forge.library.component;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import uk.co.codeecho.gdx.forge.Renderable;
-import uk.co.codeecho.gdx.forge.Updatable;
+import uk.co.codeecho.gdx.forge.component.Renderable;
+import uk.co.codeecho.gdx.forge.component.Updatable;
 import uk.co.codeecho.gdx.forge.component.Component;
 
 public class Scene2DWidgetComponent<W extends Widget> implements Component, Updatable, Renderable{

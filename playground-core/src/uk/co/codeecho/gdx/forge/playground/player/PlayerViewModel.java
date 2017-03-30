@@ -3,8 +3,8 @@ package uk.co.codeecho.gdx.forge.playground.player;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
-import uk.co.codeecho.gdx.forge.GameManager;
 import uk.co.codeecho.gdx.forge.box2d.Box2DModel;
 import uk.co.codeecho.gdx.forge.box2d.body.builder.BodyBuilder;
 import uk.co.codeecho.gdx.forge.box2d.fixture.builder.FixtureBuilder;
@@ -15,55 +15,32 @@ import uk.co.codeecho.gdx.forge.library.state.Stateful;
 
 public class PlayerViewModel implements Box2DModel, Stateful, Directional{
     
-    private static Body buildBody(World world, float x, float y, float width, float height) {
+    private static Body buildBody(World world, float x, float y, float radius) {
         Body body = new BodyBuilder(world, BodyDef.BodyType.DynamicBody)
                 .setType("player")
                 .setPosition(new Vector2(x, y))
                 .build();
+        CircleShape circleShape = new CircleShape();
+        circleShape.setRadius(radius);
         new FixtureBuilder()
                 .setId("wrapper")
                 .isSensor(true)
-                .setShape(new BoxShape(width, height))
+                .setShape(circleShape)
                 .build(body);
+        float innerRadius = (float) Math.sqrt((radius * radius) / 2);
         new FixtureBuilder()
                 .setId("boundary")
-                .setShape(new BoxShape(width*0.5f, height))
+                .setShape(new BoxShape(innerRadius*2, innerRadius*2))
                 .build(body);
-//        new FixtureBuilder()
-//                .setId("foot")
-//                .isSensor(true)
-//                .setShape(new BoxShape(width/2, GameManager.getInstance().pixelsToUnits(2), new Vector2(0, (-height/2)-GameManager.getInstance().pixelsToUnits(1))))
-//                .build(body);
         return body;
     }
     
     private final Body body;
+    private final float radius;
     
-    private String state = PlayerStates.IDLE;
-    private Direction direction = Direction.RIGHT;
-    private boolean isOnGround = false;
-    private boolean injured = false;
-    
-    public PlayerViewModel(World world, float x, float y, float width, float height) {
-        this.body = buildBody(world, x, y, width, height);
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    @Override
-    public String getState() {
-        return state;
-    }
-
-    @Override
-    public Direction getDirection() {
-        return direction;
+    public PlayerViewModel(World world, float x, float y, float radius) {
+        this.body = buildBody(world, x, y, radius);
+        this.radius = radius;
     }
 
     @Override
@@ -71,28 +48,18 @@ public class PlayerViewModel implements Box2DModel, Stateful, Directional{
         return body;
     }
 
-    public boolean isJumping(){
-        return getState().equals(PlayerStates.JUMPING);
-    }
-    
-    public boolean canJump(){
-        return isOnGround();
+    public float getRadius() {
+        return radius;
     }
 
-    public boolean isOnGround() {
-        return isOnGround;
+    @Override
+    public String getState() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void isOnGround(boolean isOnGround) {
-        this.isOnGround = isOnGround;
-    }
-
-    public boolean isInjured() {
-        return injured;
-    }
-
-    public void setInjured(boolean injured) {
-        this.injured = injured;
+    @Override
+    public Direction getDirection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

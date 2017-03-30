@@ -3,7 +3,7 @@ package uk.co.codeecho.gdx.forge.box2d.debug;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
-import uk.co.codeecho.gdx.forge.Renderable;
+import uk.co.codeecho.gdx.forge.component.Renderable;
 import uk.co.codeecho.gdx.forge.component.Component;
 
 public class Box2DDebugRenderer implements Component, Renderable {

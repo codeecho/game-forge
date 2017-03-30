@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import uk.co.codeecho.gdx.forge.event.Event;
 import uk.co.codeecho.gdx.forge.event.EventHandler;
 import uk.co.codeecho.gdx.forge.input.InputProcessor;
@@ -55,6 +56,22 @@ public class GameManager implements EventHandler<Event> {
 
     public float unitsToPixels(float meters) {
         return meters * pixelsPerUnit;
+    }
+    
+    public Vector2 pixelsToUnits(Vector2 pixelVector){
+        return new Vector2(pixelVector).scl(1/pixelsPerUnit);
+    }
+    
+    public Vector2 unitsToPixels(Vector2 unitVector){
+        return new Vector2(unitVector).scl(pixelsPerUnit);
+    }
+    
+    public Rectangle pixelsToUnits(Rectangle pixelRectangle){
+        return new Rectangle(pixelsToUnits(pixelRectangle.x), pixelsToUnits(pixelRectangle.y), pixelsToUnits(pixelRectangle.width), pixelsToUnits(pixelRectangle.height));
+    }
+    
+    public Rectangle unitsToPixels(Rectangle unitRectangle){
+        return new Rectangle(unitsToPixels(unitRectangle.x), unitsToPixels(unitRectangle.y), unitsToPixels(unitRectangle.width), unitsToPixels(unitRectangle.height));
     }
 
     public float getDisplayWidthInPixels() {

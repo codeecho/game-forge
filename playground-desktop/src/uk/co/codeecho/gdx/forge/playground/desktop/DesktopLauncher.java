@@ -7,8 +7,6 @@ import uk.co.codeecho.gdx.forge.playground.PlaygroundGame;
 public class DesktopLauncher {
 
     // TODO: Remove duplicate code from listeners and filters Use filters in listeners
-    // TODO: Make it so screen can add updatables or renderables?
-    // TODO: Split platformer to own repo
     
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

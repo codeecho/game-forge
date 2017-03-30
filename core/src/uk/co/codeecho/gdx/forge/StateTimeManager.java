@@ -1,5 +1,7 @@
 package uk.co.codeecho.gdx.forge;
 
+import uk.co.codeecho.gdx.forge.component.Updatable;
+
 public class StateTimeManager implements Updatable{
 
     private float stateTime = 0f;
